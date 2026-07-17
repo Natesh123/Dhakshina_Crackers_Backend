@@ -76,6 +76,18 @@ async function initDb() {
     `);
     console.log("Verified 'orders' table.");
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS contacts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        phone VARCHAR(50) NOT NULL,
+        message TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `);
+    console.log("Verified 'contacts' table.");
+
     try {
       await pool.query(`ALTER TABLE products ADD COLUMN discount INT DEFAULT 0;`);
       console.log("Added 'discount' column to products table.");
