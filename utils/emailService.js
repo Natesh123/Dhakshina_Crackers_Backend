@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
 
 const createTransporter = () => {
   return nodemailer.createTransport({
@@ -21,7 +22,12 @@ const sendEmail = async (to, subject, html) => {
     from: `"Sri Dhakshina Crackers" <${process.env.EMAIL_USER}>`,
     to,
     subject,
-    html
+    html,
+    attachments: [{
+      filename: 'sri_dhakshina_logo.jpg',
+      path: path.join(__dirname, 'sri_dhakshina_logo.jpg'),
+      cid: 'companylogo'
+    }]
   };
 
   try {
@@ -39,11 +45,14 @@ const accentColor = "#d97706"; // festive gold
 const redColor = "#dc2626";
 
 const emailHeader = `
-  <div style="background-color: ${primaryColor}; padding: 20px; text-align: center; border-bottom: 4px solid ${accentColor};">
-    <h1 style="color: #ffffff; margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">
+  <div style="background-color: ${primaryColor}; padding: 25px 20px; text-align: center; border-bottom: 4px solid ${accentColor};">
+    <div style="margin-bottom: 12px;">
+      <img src="cid:companylogo" alt="Sri Dhakshina Crackers" style="width: 70px; height: 70px; object-fit: contain; border-radius: 12px; border: 2px solid ${accentColor}; background-color: #ffffff; padding: 2px; display: inline-block;" />
+    </div>
+    <h1 style="color: #ffffff; margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
       Sri Dhakshina <span style="color: ${accentColor};">Crackers</span>
     </h1>
-    <p style="color: ${accentColor}; margin: 5px 0 0 0; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">Sivakasi's Pride</p>
+    <p style="color: ${accentColor}; margin: 5px 0 0 0; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">Sivakasi's Pride</p>
   </div>
 `;
 
