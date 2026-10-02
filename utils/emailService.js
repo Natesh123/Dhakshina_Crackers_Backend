@@ -24,8 +24,8 @@ const sendEmail = async (to, subject, html) => {
     subject,
     html,
     attachments: [{
-      filename: 'sri_dhakshina_logo.jpg',
-      path: path.join(__dirname, 'sri_dhakshina_logo.jpg'),
+      filename: 'vamsi_crackers_logo.png',
+      path: path.join(__dirname, 'vamsi_crackers_logo.png'),
       cid: 'companylogo'
     }]
   };
@@ -39,169 +39,246 @@ const sendEmail = async (to, subject, html) => {
   }
 };
 
-// Common Styles
-const primaryColor = "#16052b";
-const accentColor = "#d97706"; // festive gold
-const redColor = "#dc2626";
+const formatDate = (date) => {
+  return new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: true
+  }).format(date);
+};
 
-const emailHeader = `
-  <div style="background-color: ${primaryColor}; padding: 25px 20px; text-align: center; border-bottom: 4px solid ${accentColor};">
-    <div style="margin-bottom: 12px;">
-      <img src="cid:companylogo" alt="Sri Dhakshina Crackers" style="width: 70px; height: 70px; object-fit: contain; border-radius: 12px; border: 2px solid ${accentColor}; background-color: #ffffff; padding: 2px; display: inline-block;" />
-    </div>
-    <h1 style="color: #ffffff; margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-      Sri Dhakshina <span style="color: ${accentColor};">Crackers</span>
-    </h1>
-    <p style="color: ${accentColor}; margin: 5px 0 0 0; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">Sivakasi's Pride</p>
-  </div>
-`;
+const generateOrderTable = (items, totalAmount) => {
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const packingCharges = totalAmount - subtotal;
 
-const emailFooter = `
-  <div style="background-color: #f3f4f6; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; margin-top: 30px;">
-    <p style="margin: 0;">Thank you for choosing Sri Dhakshina Crackers!</p>
-    <p style="margin: 5px 0 0 0;">123 Fireworks Street, Sivakasi, Tamil Nadu</p>
-  </div>
-`;
-
-// Templates
-const getAdminOrderTemplate = (orderId, customer, items, total, savings) => {
-  const itemsHtml = items.map(i => `
+  const itemsHtml = items.map((i, index) => `
     <tr>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${i.name}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${i.quantity}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">Rs. ${i.price * i.quantity}</td>
+      <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; text-align: left; color: #374151;">${index + 1}</td>
+      <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; text-align: left; color: #374151;">${i.name}</td>
+      <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; text-align: center; color: #374151;">${i.quantity}</td>
+      <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; text-align: right; color: #374151;">₹${i.price.toFixed(2)}</td>
+      <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; text-align: right; color: #374151;">₹${(i.price * i.quantity).toFixed(2)}</td>
     </tr>
   `).join('');
 
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb;">
-      ${emailHeader}
-      <div style="padding: 20px;">
-        <h2 style="color: ${primaryColor}; margin-top: 0;">New Order Received! 🎉</h2>
-        <p style="color: #4b5563;">You have received a new order <strong>#${orderId}</strong>.</p>
-        
-        <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e7eb;">
-          <h3 style="color: ${primaryColor}; margin-top: 0; font-size: 16px;">Customer Details:</h3>
-          <p style="margin: 5px 0; color: #4b5563;"><strong>Name:</strong> ${customer.name}</p>
-          <p style="margin: 5px 0; color: #4b5563;"><strong>Phone:</strong> ${customer.phone}</p>
-          <p style="margin: 5px 0; color: #4b5563;"><strong>Email:</strong> ${customer.email || 'N/A'}</p>
-          <p style="margin: 5px 0; color: #4b5563;"><strong>City:</strong> ${customer.city}</p>
-          <p style="margin: 5px 0; color: #4b5563;"><strong>Address:</strong> ${customer.address}</p>
-        </div>
-
-        <h3 style="color: ${primaryColor}; font-size: 16px;">Order Summary:</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #f3f4f6;">
-              <th style="padding: 10px; text-align: left; color: #374151;">Item</th>
-              <th style="padding: 10px; text-align: center; color: #374151;">Qty</th>
-              <th style="padding: 10px; text-align: right; color: #374151;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; color: ${primaryColor};">Grand Total:</td>
-              <td style="padding: 10px; text-align: right; font-weight: bold; color: ${redColor}; font-size: 18px;">Rs. ${total}</td>
-            </tr>
-          </tfoot>
-        </table>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
+      <thead>
+        <tr style="background-color: #f9fafb; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
+          <th style="padding: 12px 10px; text-align: left; color: #111827; font-weight: 600;">#</th>
+          <th style="padding: 12px 10px; text-align: left; color: #111827; font-weight: 600;">Item</th>
+          <th style="padding: 12px 10px; text-align: center; color: #111827; font-weight: 600;">Qty</th>
+          <th style="padding: 12px 10px; text-align: right; color: #111827; font-weight: 600;">Price</th>
+          <th style="padding: 12px 10px; text-align: right; color: #111827; font-weight: 600;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHtml}
+      </tbody>
+    </table>
+    
+    <div style="width: 100%; text-align: right; font-size: 14px; margin-bottom: 30px;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+        <span style="color: #6b7280; margin-right: 20px; display: inline-block;">Subtotal</span>
+        <span style="color: #374151; font-weight: 500; display: inline-block; min-width: 100px;">₹${subtotal.toFixed(2)}</span>
       </div>
-      ${emailFooter}
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+        <span style="color: #6b7280; margin-right: 20px; display: inline-block;">Packing charges (3% of ₹${subtotal.toFixed(2)})</span>
+        <span style="color: #374151; font-weight: 500; display: inline-block; min-width: 100px;">₹${packingCharges.toFixed(2)}</span>
+      </div>
+      <div style="display: flex; justify-content: flex-end; border-top: 1px solid #e5e7eb; padding-top: 12px;">
+        <span style="color: #111827; font-weight: 700; margin-right: 20px; display: inline-block;">Order Total</span>
+        <span style="color: #dc2626; font-weight: 700; display: inline-block; min-width: 100px;">₹${totalAmount.toFixed(2)}</span>
+      </div>
     </div>
   `;
 };
 
-const getCustomerConfirmationTemplate = (orderId, customerName, items, total, savings) => {
-  const itemsHtml = items.map(i => `
-    <tr>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${i.name}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${i.quantity}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">Rs. ${i.price * i.quantity}</td>
-    </tr>
-  `).join('');
+const getCommonTemplate = (title, orderId, customerData, items, total, showInfoBoxes = true) => {
+  const currentDate = formatDate(new Date());
+  const { name, phone, email, city, address } = customerData;
+  const formattedOrderId = String(orderId).padStart(4, '0');
 
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb;">
-      ${emailHeader}
-      <div style="padding: 20px;">
-        <h2 style="color: ${primaryColor}; margin-top: 0;">Thank You for Your Order! 🎆</h2>
-        <p style="color: #4b5563; font-size: 16px;">Dear ${customerName},</p>
-        <p style="color: #4b5563; line-height: 1.5;">We have successfully received your order <strong>#${orderId}</strong>. Our team is currently reviewing it and will contact you shortly regarding delivery and payment confirmation.</p>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb;">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(to right, #dc2626, #eab308); padding: 25px 20px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;">
+          <img src="cid:companylogo" alt="Sri Dhakshina Crackers" style="height: 50px; width: 50px; border-radius: 8px; border: 2px solid #ffffff; background-color: #ffffff;" />
+          <h1 style="margin: 0; font-size: 26px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+            <span style="color: #ffffff;">Sri</span> <span style="color: #fef08a;">Dhakshina</span> <span style="color: #ffffff;">Crackers</span>
+          </h1>
+        </div>
+      </div>
+
+      <div style="padding: 30px 40px;">
+        <!-- Title -->
+        <h2 style="color: #dc2626; margin: 0 0 20px 0; font-size: 22px; font-weight: 600;">${title}</h2>
         
-        <div style="background-color: #fffbeb; border-left: 4px solid ${accentColor}; padding: 15px; margin: 20px 0;">
-          <p style="margin: 0; color: #92400e; font-weight: bold;">Order Status: Pending Confirmation</p>
+        <p style="color: #111827; margin: 0 0 10px 0; font-size: 15px;">Hi ${name},</p>
+        <p style="color: #111827; margin: 0 0 25px 0; font-size: 15px;">Thank you for your order. Here's your summary:</p>
+
+        <!-- Order Info -->
+        <div style="margin-bottom: 25px; font-size: 15px;">
+          <p style="margin: 0 0 5px 0;"><strong style="color: #111827;">Order #:</strong> ${formattedOrderId}</p>
+          <p style="margin: 0;"><strong style="color: #111827;">Date:</strong> ${currentDate}</p>
         </div>
 
-        <h3 style="color: ${primaryColor}; font-size: 16px;">Your Order Details:</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #f3f4f6;">
-              <th style="padding: 10px; text-align: left; color: #374151;">Item</th>
-              <th style="padding: 10px; text-align: center; color: #374151;">Qty</th>
-              <th style="padding: 10px; text-align: right; color: #374151;">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; color: ${primaryColor}; border-top: 2px solid #e5e7eb;">Grand Total:</td>
-              <td style="padding: 10px; text-align: right; font-weight: bold; color: ${redColor}; font-size: 18px; border-top: 2px solid #e5e7eb;">Rs. ${total}</td>
-            </tr>
-            ${savings > 0 ? `
-            <tr>
-              <td colspan="2" style="padding: 5px 10px; text-align: right; font-weight: bold; color: #10b981;">Total Savings:</td>
-              <td style="padding: 5px 10px; text-align: right; font-weight: bold; color: #10b981;">Rs. ${savings}</td>
-            </tr>` : ''}
-          </tfoot>
-        </table>
-        
-        <p style="color: #4b5563; font-size: 14px; line-height: 1.5;">If you have any questions or need to make changes to your order, please contact our support team immediately.</p>
+        <!-- Order Table -->
+        ${generateOrderTable(items, total)}
+
+        <!-- Delivery Address -->
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 8px 0;">Delivery Address</h3>
+          <p style="color: #4b5563; margin: 0; font-size: 15px; line-height: 1.5;">
+            ${name} <br/>
+            ${address}, ${city} <br/>
+            Phone: ${phone}
+          </p>
+        </div>
+
+        <p style="color: #4b5563; margin: 0 0 30px 0; font-size: 15px;">We'll contact you shortly to confirm payment and arrange delivery.</p>
+
+        ${showInfoBoxes ? `
+        <!-- Important Box -->
+        <div style="background-color: #fefce8; border-left: 4px solid #eab308; padding: 20px; margin-bottom: 25px; border-radius: 4px;">
+          <div style="color: #dc2626; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            📌 Important
+          </div>
+          <ul style="color: #4b5563; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.6;">
+            <li>This is an order confirmation, not a payment receipt.</li>
+            <li>Our team will call you to confirm your order and payment.</li>
+            <li>Please keep your order number (#${formattedOrderId}) handy for any queries.</li>
+            <li>Prices shown are locked at the time of ordering.</li>
+          </ul>
+        </div>
+
+        <!-- Contact Box -->
+        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+          <div style="color: #111827; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-size: 16px;">
+            📞 Need help? Contact us
+          </div>
+          <div style="color: #4b5563; font-size: 14px; line-height: 1.8;">
+            <p style="margin: 0;"><strong style="color: #111827;">Phone:</strong> <a href="tel:+98941 16131" style="color: #dc2626; text-decoration: none;">+91 9894116131</a></p>
+            <p style="margin: 0;"><strong style="color: #111827;">WhatsApp:</strong> <a href="https://wa.me/9894116131" style="color: #10b981; text-decoration: none;">Chat with us</a></p>
+            <p style="margin: 0;"><strong style="color: #111827;">Email:</strong> <a href="mailto:sridhakshinacrackers@gmail.com" style="color: #dc2626; text-decoration: none;">sridhakshinacrackers@gmail.com</a></p>
+            <p style="margin: 0;"><strong style="color: #111827;">Hours:</strong> Mon – Sat, 9:00 AM – 8:00 PM</p>
+            <p style="margin: 0;"><strong style="color: #111827;">Shop:</strong> Sivakasi, Tamil Nadu</p>
+          </div>
+        </div>
+
+        <!-- Safety Box -->
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; text-align: center; color: #991b1b; font-size: 13px; line-height: 1.5;">
+          ⚠️ Safety first: Always follow safety instructions when handling fireworks. Keep away from children, store in a cool dry place, and use in open spaces only.
+        </div>
+        ` : ''}
       </div>
-      ${emailFooter}
+
+      <!-- Footer -->
+      <div style="background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb;">
+        © 2026 Sri Dhakshina Crackers · This is an automated confirmation, please do not reply directly.
+      </div>
     </div>
   `;
+};
+
+const getAdminOrderTemplate = (orderId, customer, items, total, savings) => {
+  const currentDate = formatDate(new Date());
+  const formattedOrderId = String(orderId).padStart(4, '0');
+  const { name, phone, email, city, address } = customer;
+
+  return `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #f9fafb; border: 1px solid #e5e7eb;">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(to right, #1e3a8a, #3b82f6); padding: 20px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 600;">🔔 New Order Alert: #${formattedOrderId}</h1>
+      </div>
+
+      <div style="padding: 30px 40px; background-color: #ffffff;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 2px solid #f3f4f6; padding-bottom: 15px;">
+          <div>
+            <h3 style="color: #1f2937; margin: 0 0 5px 0; font-size: 16px;">Order Placed On</h3>
+            <p style="color: #4b5563; margin: 0; font-size: 14px;">${currentDate}</p>
+          </div>
+          <div style="text-align: right;">
+            <h3 style="color: #1f2937; margin: 0 0 5px 0; font-size: 16px;">Order Amount</h3>
+            <p style="color: #dc2626; margin: 0; font-size: 18px; font-weight: 700;">₹${total.toFixed(2)}</p>
+          </div>
+        </div>
+
+        <!-- Customer Details Box -->
+        <div style="background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; margin-bottom: 25px; border-radius: 4px;">
+          <h3 style="color: #1e3a8a; font-weight: 600; margin: 0 0 10px 0; font-size: 16px;">Customer Details</h3>
+          <p style="margin: 0 0 5px 0; font-size: 14px;"><strong style="color: #4b5563;">Name:</strong> <span style="color: #111827;">${name}</span></p>
+          <p style="margin: 0 0 5px 0; font-size: 14px;"><strong style="color: #4b5563;">Phone:</strong> <span style="color: #111827;">${phone}</span></p>
+          <p style="margin: 0 0 5px 0; font-size: 14px;"><strong style="color: #4b5563;">City:</strong> <span style="color: #111827;">${city}</span></p>
+          <p style="margin: 0; font-size: 14px;"><strong style="color: #4b5563;">Address:</strong> <span style="color: #111827;">${address}</span></p>
+        </div>
+
+        <h3 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 15px 0;">Items Ordered</h3>
+        ${generateOrderTable(items, total)}
+
+      </div>
+      
+      <!-- Footer -->
+      <div style="background-color: #f3f4f6; padding: 15px; text-align: center; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb;">
+        Dhakshina Crackers Admin Notification System
+      </div>
+    </div>
+  `;
+};
+
+// Now this signature expects the full customer object, so we must change the caller in orderController.js
+const getCustomerConfirmationTemplate = (orderId, customerData, items, total, savings) => {
+  return getCommonTemplate('Order Confirmed!', orderId, customerData, items, total, true);
 };
 
 const getCustomerStatusUpdateTemplate = (orderId, customerName, newStatus) => {
-  let statusColor = "#3b82f6"; // blue
+  const formattedOrderId = String(orderId).padStart(4, '0');
+  let statusColor = "#3b82f6";
   let statusMessage = "Your order status has been updated.";
-  
+
   if (newStatus === "Processing") {
-    statusColor = "#f59e0b"; // amber
+    statusColor = "#f59e0b";
     statusMessage = "Good news! We are now processing your order and getting your fireworks ready.";
   } else if (newStatus === "Shipped" || newStatus === "Dispatched") {
-    statusColor = "#8b5cf6"; // purple
+    statusColor = "#8b5cf6";
     statusMessage = "Your order has been dispatched and is on its way to you!";
   } else if (newStatus === "Completed" || newStatus === "Delivered") {
-    statusColor = "#10b981"; // green
+    statusColor = "#10b981";
     statusMessage = "Your order has been completed successfully. We hope you have a fantastic celebration!";
   } else if (newStatus === "Cancelled") {
-    statusColor = "#ef4444"; // red
+    statusColor = "#ef4444";
     statusMessage = "Your order has been cancelled. If you have any questions, please contact our support team.";
   }
 
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb;">
-      ${emailHeader}
-      <div style="padding: 20px;">
-        <h2 style="color: ${primaryColor}; margin-top: 0;">Order Status Update</h2>
-        <p style="color: #4b5563; font-size: 16px;">Dear ${customerName},</p>
-        <p style="color: #4b5563; line-height: 1.5;">This is an update regarding your order <strong>#${orderId}</strong>.</p>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb;">
+      <div style="background: linear-gradient(to right, #dc2626, #eab308); padding: 25px 20px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;">
+          <img src="cid:companylogo" alt="Sri Dhakshina Crackers" style="height: 50px; width: 50px; border-radius: 8px; border: 2px solid #ffffff; background-color: #ffffff;" />
+          <h1 style="margin: 0; font-size: 26px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+            <span style="color: #ffffff;">Sri</span> <span style="color: #fef08a;">Dhakshina</span> <span style="color: #ffffff;">Crackers</span>
+          </h1>
+        </div>
+      </div>
+      <div style="padding: 30px;">
+        <h2 style="color: #dc2626; margin: 0 0 20px 0; font-size: 22px;">Order Status Update</h2>
+        <p style="color: #111827; font-size: 16px;">Dear ${customerName},</p>
+        <p style="color: #4b5563; line-height: 1.5;">This is an update regarding your order <strong>#${formattedOrderId}</strong>.</p>
         
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid ${statusColor}; padding: 20px; margin: 25px 0; text-align: center;">
-          <p style="margin: 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Current Status</p>
-          <h1 style="margin: 10px 0; color: ${statusColor}; font-size: 28px; text-transform: uppercase;">${newStatus}</h1>
-          <p style="margin: 0; color: #334155; font-size: 15px;">${statusMessage}</p>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid ${statusColor}; padding: 25px; margin: 30px 0; text-align: center; border-radius: 6px;">
+          <p style="margin: 0; color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Current Status</p>
+          <h1 style="margin: 15px 0; color: ${statusColor}; font-size: 28px; text-transform: uppercase; letter-spacing: 1px;">${newStatus}</h1>
+          <p style="margin: 0; color: #334155; font-size: 15px; line-height: 1.5;">${statusMessage}</p>
         </div>
 
         <p style="color: #4b5563; font-size: 14px; line-height: 1.5;">Thank you for shopping with us! If you need any assistance, feel free to reply to this email.</p>
       </div>
-      ${emailFooter}
+      <div style="background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb;">
+        © 2026 Sri Dhakshina Crackers
+      </div>
     </div>
   `;
 };

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 17, 2026 at 06:57 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 19, 2026 at 12:09 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `crackers_city`
+-- Database: `dhakshina_crackers`
 --
 
 -- --------------------------------------------------------
@@ -37,12 +37,34 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`) VALUES
-(2, 'Flower Pots (மலர் பானைகள்)'),
+(2, 'Flower Pots'),
 (6, 'Garlands (மாலைகள்)'),
 (3, 'Ground Chakkars (தரை சக்கரங்கள்)'),
 (4, 'Rockets (ராக்கெட்டுகள்)'),
 (5, 'Sky Shots (ஸ்கை ஷாட்ஸ்)'),
 (1, 'Sparklers (ஸ்பார்க்லர்கள்)');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contacts`
+--
+
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contacts`
+--
+
+INSERT INTO `contacts` (`id`, `name`, `phone`, `message`, `is_read`, `created_at`) VALUES
+(2, 'Siva kumar', '9894736131', 'Test', 0, '2026-07-17 05:40:38');
 
 -- --------------------------------------------------------
 
@@ -83,7 +105,13 @@ INSERT INTO `orders` (`id`, `customer_name`, `customer_phone`, `customer_city`, 
 (22, 'Natesh kumar', '9894116131', 'Sivakasi', '901 SIVAN KOVIL NANTHAVNAM, SIVAKASI', 670, 2680, '[{\"id\":6,\"name\":\"Flower Pot Special\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":180,\"originalPrice\":900,\"quantity\":1},{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":80,\"originalPrice\":400,\"quantity\":1},{\"id\":9,\"name\":\"Spinner Special (ஸ்பின்னர் ஸ்பெஷல்)\",\"category\":\"Ground Chakkars (தரை சக்கரங்கள்)\",\"price\":150,\"originalPrice\":750,\"quantity\":1},{\"id\":8,\"name\":\"Chakkar Deluxe\",\"category\":\"Ground Chakkars (தரை சக்கரங்கள்)\",\"price\":120,\"originalPrice\":600,\"quantity\":1}]', 'Pending', '2026-07-13 12:31:17', 'nateshkumarselvamurugan@gmail.com', 'Website', 1),
 (2026202701, 'NATESH KUMAR SELVAMURUGAN', '09894116131', 'SIVAKASI', '901 SIVAN KOVIL NANTHAVNAM, SIVAKASI', 400, 1600, '[{\"id\":6,\"name\":\"Flower Pot Special\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":180,\"originalPrice\":900,\"quantity\":1},{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":80,\"originalPrice\":400,\"quantity\":1}]', 'Pending', '2026-07-14 15:40:18', 'NATESHKUMAR1406@GMAIL.COM', 'Website', 1),
 (2026202702, 'Natesh kumar', '9894116131', 'Sivakasi', '901, Sivan kOvil Nanthavanam Street', 220, 880, '[{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":80,\"originalPrice\":400,\"quantity\":1}]', 'Shipped', '2026-07-15 07:54:43', 'nateshkumar1406@gmail.com', 'Website', 1),
-(2026202703, 'Natesh kumar', '9894116131', 'Sivakasi', '901, Sivan kOvil Nanthavanam Street', 110, 440, '[{\"id\":2,\"name\":\"10cm Green Sparklers\",\"category\":\"Sparklers (ஸ்பார்க்லர்கள்)\",\"price\":60,\"originalPrice\":300,\"quantity\":1},{\"id\":1,\"name\":\"7cm Electric Sparklers\",\"category\":\"Sparklers (ஸ்பார்க்லர்கள்)\",\"price\":50,\"originalPrice\":250,\"quantity\":1}]', 'Shipped', '2026-07-15 07:58:52', 'nateshkumarselvamurugan@gmail.com', 'Website', 1);
+(2026202703, 'Natesh kumar', '9894116131', 'Sivakasi', '901, Sivan kOvil Nanthavanam Street', 110, 440, '[{\"id\":2,\"name\":\"10cm Green Sparklers\",\"category\":\"Sparklers (ஸ்பார்க்லர்கள்)\",\"price\":60,\"originalPrice\":300,\"quantity\":1},{\"id\":1,\"name\":\"7cm Electric Sparklers\",\"category\":\"Sparklers (ஸ்பார்க்லர்கள்)\",\"price\":50,\"originalPrice\":250,\"quantity\":1}]', 'Shipped', '2026-07-15 07:58:52', 'nateshkumarselvamurugan@gmail.com', 'Website', 1),
+(2026202704, 'Selvamurugan ', '9943916131', 'Sivakasi', '901, Sivan Kovil Nanthavana Street', 1540, 1360, '[{\"id\":15,\"name\":\"1000 Wala\",\"category\":\"Garlands (மாலைகள்)\",\"price\":1200,\"originalPrice\":1200,\"quantity\":1},{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":80,\"originalPrice\":400,\"quantity\":1},{\"id\":8,\"name\":\"Chakkar Deluxe\",\"category\":\"Ground Chakkars (தரை சக்கரங்கள்)\",\"price\":120,\"originalPrice\":600,\"quantity\":1}]', 'Pending', '2026-07-17 06:18:56', 'nateshkumarselvamurugan@gmail.com', 'Website', 1),
+(2026202705, 'Siva kumar', '9894736131', 'Sivakasi', '901, Sivan Kovil Street', 50, 200, '[{\"id\":1,\"name\":\"7cm Electric Sparklers\",\"category\":\"Sparklers (ஸ்பார்க்லர்கள்)\",\"price\":50,\"originalPrice\":250,\"quantity\":1}]', 'Pending', '2026-07-17 06:22:32', 'nateshkumarselvamurugan@gmail.com', 'Website', 1),
+(2026202706, 'NATESH KUMAR SELVAMURUGAN', '09894116131', 'SIVAN KOVIL NANTHAVNAM, SIVAKASI', '901', 5040, 20160, '[{\"id\":15,\"name\":\"1000 Wala\",\"category\":\"Garlands (மாலைகள்)\",\"price\":1200,\"originalPrice\":1200,\"quantity\":1},{\"id\":14,\"name\":\"240 Shot Mega Show\",\"category\":\"Sky Shots (ஸ்கை ஷாட்ஸ்)\",\"price\":24000,\"originalPrice\":24000,\"quantity\":1}]', 'Completed', '2026-07-17 07:06:30', 'NATESHKUMAR1406@GMAIL.COM', 'POS', 0),
+(2026202707, 'NATESH KUMAR SELVAMURUGAN', '98941161431', 'SIVAN KOVIL NANTHAVNAM, SIVAKASI', '901', 220, 880, '[{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots (மலர் பானைகள்)\",\"price\":80,\"originalPrice\":400,\"quantity\":1}]', 'Completed', '2026-07-17 07:16:50', 'NATESHKUMAR1406@GMAIL.COM', 'POS', 0),
+(2026202708, 'NATESH KUMAR SELVAMURUGAN', '9894116131', 'SIVAN KOVIL NANTHAVNAM, SIVAKASI', '901', 1760, 7040, '[{\"id\":15,\"name\":\"1000 Wala (1000 வாலா)\",\"category\":\"Garlands (மாலைகள்)\",\"price\":240,\"originalPrice\":1200,\"quantity\":1},{\"id\":11,\"name\":\"Lunik Rocket (லுனிக் ராக்கெட்)\",\"category\":\"Rockets (ராக்கெட்டுகள்)\",\"price\":180,\"originalPrice\":900,\"quantity\":1},{\"id\":13,\"name\":\"30 Shot Multi Color (30 ஷாட் மல்டி கலர்)\",\"category\":\"Sky Shots (ஸ்கை ஷாட்ஸ்)\",\"price\":1000,\"originalPrice\":5000,\"quantity\":1},{\"id\":12,\"name\":\"12 Shot Skyout (12 ஷாட் ஸ்கைஅவுட்)\",\"category\":\"Sky Shots (ஸ்கை ஷாட்ஸ்)\",\"price\":340,\"originalPrice\":1700,\"quantity\":1}]', 'Completed', '2026-07-19 06:15:21', 'nateshkumarselvamurugan@gmail.com', 'POS', 0),
+(2026202709, 'Nandha', '9025526705', 'Sivakasi', 'Sithurajapuram ', 24460, 1840, '[{\"id\":14,\"name\":\"240 Shot Mega Show\",\"category\":\"Sky Shots (ஸ்கை ஷாட்ஸ்)\",\"price\":24000,\"originalPrice\":24000,\"quantity\":1},{\"id\":5,\"name\":\"Flower Pot Big\",\"category\":\"Flower Pots\",\"price\":140,\"originalPrice\":700,\"quantity\":1},{\"id\":4,\"name\":\"Flower Pot Small\",\"category\":\"Flower Pots\",\"price\":80,\"originalPrice\":400,\"quantity\":1},{\"id\":15,\"name\":\"1000 Wala (1000 வாலா)\",\"category\":\"Garlands (மாலைகள்)\",\"price\":240,\"originalPrice\":1200,\"quantity\":1}]', 'Processing', '2026-07-19 06:21:19', 'nanthaswetha7@gmail.com', 'Website', 1);
 
 -- --------------------------------------------------------
 
@@ -119,9 +147,9 @@ INSERT INTO `products` (`id`, `name`, `price`, `originalPrice`, `image`, `catego
 (10, 'Baby Rocket', 60, 300, '/assets/images/products/rockets.png', 4, 80, 1),
 (11, 'Lunik Rocket (லுனிக் ராக்கெட்)', 180, 900, '/assets/images/products/rockets.png', 4, 80, 1),
 (12, '12 Shot Skyout (12 ஷாட் ஸ்கைஅவுட்)', 340, 1700, '/assets/images/products/sky_shots.png', 5, 80, 1),
-(13, '30 Shot Multi Color (30 ஷாட் மல்டி கலர்)', 5000, 5000, '/assets/images/products/sky_shots.png', 5, 0, 1),
-(14, '240 Shot Mega Show', 24000, 24000, '/assets/images/products/sky_shots.png', 5, 0, 1),
-(15, '1000 Wala', 1200, 1200, '/assets/images/products/garlands.png', 6, 0, 1);
+(13, '30 Shot Multi Color (30 ஷாட் மல்டி கலர்)', 1000, 5000, '/assets/images/products/sky_shots.png', 5, 80, 1),
+(14, '240 Shot Mega Show', 4800, 24000, '/assets/images/products/sky_shots.png', 5, 80, 1),
+(15, '1000 Wala (1000 வாலா)', 240, 1200, '/assets/images/products/garlands.png', 6, 80, 1);
 
 -- --------------------------------------------------------
 
@@ -153,6 +181,12 @@ ALTER TABLE `categories`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -182,10 +216,16 @@ ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2026202704;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2026202710;
 
 --
 -- AUTO_INCREMENT for table `products`
